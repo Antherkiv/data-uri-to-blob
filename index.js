@@ -3,13 +3,13 @@
  * Blob constructor.
  */
 
-var Blob = window.Blob;
+var Blob = typeof window !== 'undefined' && window.Blob;
 
 /**
  * ArrayBufferView support.
  */
 
-var hasArrayBufferView = new Blob([new Uint8Array(100)]).size == 100;
+var hasArrayBufferView = Blob && new Blob([new Uint8Array(100)]).size == 100;
 
 /**
  * Return a `Blob` for the given data `uri`.
@@ -20,6 +20,7 @@ var hasArrayBufferView = new Blob([new Uint8Array(100)]).size == 100;
  */
 
 module.exports = function(uri){
+  if (!Blob) return;
   var data = uri.split(',')[1];
   var bytes = typeof atob === 'undefined' ? window.atob(data) : atob(data);
   var buf = new ArrayBuffer(bytes.length);
